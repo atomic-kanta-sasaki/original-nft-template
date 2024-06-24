@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { BlobServiceClient, BlockBlobUploadOptions, StorageSharedKeyCredential, ContainerClient } from '@azure/storage-blob';
 import PinataClient, { PinataPinOptions } from "@pinata/sdk";
 import { v4 as uuidv4 } from 'uuid';
+import { Network } from 'alchemy-sdk';
+import { ethers } from "ethers";
+import { erc721Abi } from '../abi/erc721';
 
 type requestBody ={
   name: string;
@@ -26,8 +29,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const fileName = `${uuidv4()}.${exif}`;
 
   // Enter your storage account name and shared key
-  const account = process.env.AZURE_STORAGE_ACCOUNT_NAME || "ストレージアカウント名";
-  const accountKey = process.env.AZURE_STORAGE_ACCOUNT_KEY || "キー";
+  const account = process.env.AZURE_STORAGE_ACCOUNT_NAME!;
+  const accountKey = process.env.AZURE_STORAGE_ACCOUNT_KEY!;
 
   const sharedKeyCredential = new StorageSharedKeyCredential(account, accountKey);
   const blobServiceClient = new BlobServiceClient(
@@ -36,7 +39,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   );
 
   // コンテナの作成
-  const containerName = process.env.AZURE_STORAGE_CONTAONER_NAME || "コンテナ名";
+  const containerName = process.env.AZURE_STORAGE_CONTAONER_NAME!;
   const containerClient: ContainerClient = blobServiceClient.getContainerClient(containerName);
   // blobの作成
   const blobName = fileName;
@@ -73,6 +76,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const res = await pinata.pinJSONToIPFS(metadata, pinataOptions);
 
   // web3でNFTをmint
+  const provider = new ethers.AlchemyProvider(process.env.ETH_NETWORK, process.env.ALCHEMY_API_KEY!);
+  const wallet = new ethers.Wallet(process.env.METAMASK_PRIVATE_KEY!, provider);
+  const contract = new ethers.Contract(process.env.CONTRACT_ADDRESS!, erc721Abi, wallet);
+  const tx = await contract.safeMint(process.env.METAMASK_EOA_ADDRESS!, res.IpfsHash);
+  await tx.wait();
+
   return NextResponse.json({
     status: 'ok',
     lobUrl: blockBlobClient.url,
