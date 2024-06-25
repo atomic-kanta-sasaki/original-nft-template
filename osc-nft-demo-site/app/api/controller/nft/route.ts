@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { MintService } from '../../service/mint/mint';
+import { MintService } from '../../service/nft/mint';
 import { BlobService } from '../../service/shared/blob';
 import { PinataService } from '../../service/shared/pinata';
 import { EtherService } from '../../service/shared/ether';

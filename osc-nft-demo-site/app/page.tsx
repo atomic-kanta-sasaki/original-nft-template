@@ -37,7 +37,7 @@ export default function Home() {
   // nft image
   const [preview, setPreview] = useState<string | ArrayBuffer | null>(null);
   const [image, setImage] = useState<File | null>(null);
-  const handleImageChange = (e:any) => {
+  const handleImageChange = (e: any) => {
     const file = e.target.files[0];
     setImage(file);
     if (file) {
