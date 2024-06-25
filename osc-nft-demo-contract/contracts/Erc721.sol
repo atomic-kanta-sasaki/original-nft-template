@@ -11,7 +11,7 @@ contract Erc721 is ERC721, ERC721URIStorage, Ownable {
     uint256 private _nextTokenId;
 
     constructor(address initialOwner)
-        ERC721("MyToken", "MTK")
+        ERC721("OSC hokkaido Token", "MTK")
         Ownable(initialOwner)
     {}
 

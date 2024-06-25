@@ -18,6 +18,15 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
+const NftMintPageContainer = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '10px',
+  width:'80%',
+  margin: '0 auto',
+  maxWidth: '500px',
+});
+
 export default function Home() {
   // nft name
   const [text, setText] = useState('');
@@ -61,7 +70,7 @@ export default function Home() {
 
   return <>
     <main>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <NftMintPageContainer>
         <Box
           sx={{
             width: 500,
@@ -82,7 +91,7 @@ export default function Home() {
           <VisuallyHiddenInput type="file" onChange={handleImageChange}/>
         </Button>
         <Button variant="contained" onClick={handleOnClick}>Mint</Button>
-      </div>
+      </NftMintPageContainer>
     </main>
   </>;
 }
