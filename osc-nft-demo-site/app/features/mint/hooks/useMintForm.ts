@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useMintApi } from "./useMintApi";
+import { useSnackbar } from "../../../hooks/useSnackbar";
 
 export type MintFormState = {
   name: string;
@@ -15,6 +16,7 @@ export type MintFormActions = {
 
 export const useMintForm = ():[MintFormState, MintFormActions] => {
   const { mint } = useMintApi();
+  const [{},{ handleSnackbar }] = useSnackbar();
   const [name, setName] = useState('');
   const [preview, setPreview] = useState<string | ArrayBuffer | null>(null);
   const [image, setImage] = useState<File | null>(null);
@@ -40,6 +42,7 @@ export const useMintForm = ():[MintFormState, MintFormActions] => {
       return;
     }
     await mint({name, image});
+    handleSnackbar('Minting Success!!');
   }
 
   return[
