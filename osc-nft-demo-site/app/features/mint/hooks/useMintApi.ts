@@ -24,7 +24,6 @@ export const useMintApi = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log(res);
     } catch (error) {
       console.error(error);
     }

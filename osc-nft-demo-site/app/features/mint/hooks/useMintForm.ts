@@ -1,25 +1,25 @@
 import { useState } from "react";
 import { useMintApi } from "./useMintApi";
-import { useSnackbar } from "../../../hooks/useSnackbar";
-
+import { useSnackbar, SnackbarState, SnackbarActions } from "../../../hooks/useSnackbar";
 export type MintFormState = {
   name: string;
   preview: string | ArrayBuffer | null;
   image: File | null;
-}
+} & SnackbarState;
 
 export type MintFormActions = {
   handleNameChange: (e: any) => void;
   handleImageChange: (e: any) => void;
   handleOnClick: () => void;
+  handleClose: () => void;
 }
 
 export const useMintForm = ():[MintFormState, MintFormActions] => {
   const { mint } = useMintApi();
-  const [{},{ handleSnackbar }] = useSnackbar();
   const [name, setName] = useState('');
   const [preview, setPreview] = useState<string | ArrayBuffer | null>(null);
   const [image, setImage] = useState<File | null>(null);
+  const [{ isOpen, message }, { handleClose, handleSnackbar }] = useSnackbar();
 
   const handleNameChange = (e:any) => {
     setName(e.target.value);
@@ -45,16 +45,8 @@ export const useMintForm = ():[MintFormState, MintFormActions] => {
     handleSnackbar('Minting Success!!');
   }
 
-  return[
-    {
-      name,
-      preview,
-      image
-    },
-    {
-      handleNameChange,
-      handleImageChange,
-      handleOnClick
-    }
-  ]
+  return [
+    { name, preview, image, isOpen, message },
+    { handleNameChange, handleImageChange, handleOnClick, handleClose }
+  ];
 };
