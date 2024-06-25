@@ -14,7 +14,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     new PinataService()
   );
 
-  // await mintService.mint(formData.get('name') as string, imageFile);
+  await mintService.mint(formData.get('name') as string, imageFile);
   
   return NextResponse.json({
     message: 'Minting Success!!',
